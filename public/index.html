@@ -1,0 +1,195 @@
+<html>
+
+<head>
+	<title>Family Heritage</title>
+	<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+
+
+<div class="container">
+	<div class="row">
+		<h2 class="text-center">Family Hierarchy</h2>
+		<hr/>
+	</div>
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1">
+			<button class="btn btn-success" data-bind="click: showAddPersonModal">Add Person</button>
+			<form class="form-inline pull-right">
+				<div class="form-group">
+					<label class="sr-only">Search Text</label>
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search" name="search_text" data-bind="value: searchText, valueUpdate: 'afterkeydown'"/>
+						<span class="input-group-addon">
+							<i class="fa fa-search"></i>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-xs-12">
+			<table class="table table-bordered table-striped">
+				<thead>
+				<tr>
+
+					<th>First Name</th>
+					<th>Middle Name</th>
+					<th>Last Name</th>
+					<th>Parents</th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody data-bind="foreach: filteredItems">
+				<tr data-bind="visible: !hidden()">
+					<!--<td width="35px">-->
+						<!--<div data-bind="selected = !selected" style="padding: 2px 0 0 15px">-->
+						<!--<i class="fa x2 fa-check-square-o" ng-if="lead.selected"></i>-->
+						<!--<i class="fa x2 fa-square-o" ng-if="!lead.selected"></i>-->
+						<!--</div>-->
+					<!--</td>-->
+					<td>
+						<a href="#" data-bind="click: openRecord, text: firstName"></a>
+					</td>
+
+					<td data-bind="text: middleName"></td>
+					<td data-bind="text: lastName"></td>
+					<td>
+						<div data-bind="visible: parents.father.id">
+							<b> Father : </b>
+							<a href="#" data-bind="text: parents.father.fullName, click: openFather"></a>
+						</div>
+						<div data-bind= "visible: parents.mother.id">
+							<b>Mother : </b>
+							<a href="#" data-bind="click: openMother,text: parents.mother.fullName"></a>
+						</div>
+					</td>
+					<td>
+						<button data-bind="click: deleteRecord" class="btn btn-danger">Delete</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="viewPersonModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">View Person</h4>
+			</div>
+			<div class="modal-body clearfix">
+				<div>
+					<label class="control-label">First Name</label>
+					<div data-bind="text: currentRecord.firstName"></div>
+				</div>
+				<div>
+					<label class="control-label">Middle Name</label>
+					<div data-bind="text: currentRecord.middleName"></div>
+				</div>
+				<div>
+					<label class="control-label">Last Name</label>
+					<div data-bind="text: currentRecord.lastName"></div>
+				</div>
+				<div>
+					<label class="control-label">Parents</label>
+					<div class="padded-left-10" data-bind="">
+						<div data-bind="visible: currentRecord.parents.father.id">
+							<b> Father : </b>
+							<a href="#" data-bind="text: currentRecord.parents.father.fullName, click: function(){openParent(currentRecord.parents.father)}"></a>
+						</div>
+						<div data-bind="visible: currentRecord.parents.mother.id">
+							<b>Mother : </b>
+							<a href="#" data-bind="text: currentRecord.parents.mother.fullName, click: function(){openParent(currentRecord.parents.mother)}"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-bind="click: editCurrentPerson">Edit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addPersonModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel" data-bind="text: formInfo.modalTitle"></h4>
+			</div>
+
+			<div class="modal-body clearfix">
+				<div class="col-xs-12">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="control-label">First Name</label>
+							<input type="text" class="form-control" required data-bind="value: newPerson.firstName" />
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Middle Name</label>
+							<input type="text" class="form-control" required data-bind="value: newPerson.middleName" />
+						</div>
+						<div class="form-group">
+							<label class="control-label">Last Name</label>
+							<input type="text" class="form-control" required data-bind="value: newPerson.lastName" />
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Parents</label>
+							<div class="padded-left-10">
+								<div data-bind="visible: newPerson.parents.father.id">
+									<b> Father : </b>
+									<span data-bind="text: newPerson.parents.father.fullName"></span>
+								</div>
+								<div data-bind="visible: newPerson.parents.mother.id">
+									<b>Mother : </b>
+									<span data-bind="text: newPerson.parents.mother.fullName"></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<form class="form-inline">
+								<div class="col-xs-6">
+									<select class="form-control" data-bind="options: filterParents(), optionsText: 'firstName',
+								     value: parentsSetup.selectedParent, optionsCaption: 'Choose Parent ...'"></select>
+								</div>
+								<div class="col-xs-4">
+									<select class="form-control" data-bind="options: metaInfo.parentTypes, optionsText: 'name',
+								     value: parentsSetup.selectedParentType, optionsCaption: 'Choose Parent Type...'"></select>
+								</div>
+								<div class="col-xs-2">
+									<button class="btn btn-sm btn-default"
+									        data-bind="click: parentsSetup.addParent" type="button">Set
+									</button>
+								</div>
+							</form>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" type="button" data-bind="click: addPerson, text:formInfo.saveButtonText">Create Person</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../bower_components/knockout/dist/knockout.js"></script>
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
