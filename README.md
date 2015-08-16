@@ -1,11 +1,3 @@
-.DS_Store
-.nodemonignore
-.sass-cache/
-npm-debug.log
-node_modules/
-public/lib
-app/tests/coverage/
-.bower-*/
-.idea/
-public/dist/
-
+# Family Hierarchy
+A simple example on KnockoutJS and Typescript
+Filtering and creation of new user records. Will referencing their parents from the existing set of users
